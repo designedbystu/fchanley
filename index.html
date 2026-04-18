@@ -1,0 +1,387 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>FC Hanley PCT — Match Records</title>
+<link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@400;600;700;800&family=Barlow:wght@400;500&display=swap" rel="stylesheet">
+<style>
+  *{box-sizing:border-box;margin:0;padding:0;}
+  body{min-height:100vh;background:#07090f;font-family:'Barlow Condensed',sans-serif;color:#e8eaf0;}
+  a{color:inherit;text-decoration:none;}
+
+  /* HEADER */
+  .header{background:linear-gradient(135deg,#0d1b3e 0%,#1a2f6e 50%,#0d1b3e 100%);border-bottom:3px solid #3b82f6;padding:24px 32px;}
+  .header-inner{display:flex;align-items:center;justify-content:space-between;max-width:960px;margin:0 auto;flex-wrap:wrap;gap:16px;}
+  .header-brand{display:flex;align-items:center;gap:16px;}
+  .header-brand .icon{font-size:40px;}
+  .header-title{font-size:28px;font-weight:800;letter-spacing:2px;text-transform:uppercase;color:#fff;}
+  .header-sub{font-size:13px;color:#93c5fd;letter-spacing:1px;font-family:'Barlow',sans-serif;}
+  .header-stats{display:flex;gap:20px;}
+  .stat{text-align:center;}
+  .stat-val{font-size:22px;font-weight:800;display:block;}
+  .stat-lbl{font-size:11px;color:#6b7280;letter-spacing:1px;text-transform:uppercase;}
+
+  /* MAIN */
+  .main{max-width:960px;margin:0 auto;padding:24px 16px;}
+
+  /* ADD MATCH BUTTON */
+  .btn{border:none;padding:10px 24px;border-radius:6px;font-family:'Barlow Condensed',sans-serif;font-size:15px;font-weight:700;letter-spacing:1px;text-transform:uppercase;cursor:pointer;transition:opacity .2s;}
+  .btn:hover{opacity:.85;}
+  .btn-blue{background:#2563eb;color:#fff;}
+  .btn-cancel{background:#374151;color:#fff;}
+  .btn-green{background:#16a34a;color:#fff;}
+
+  /* FORM */
+  .form-box{background:#0f1729;border:1px solid #1e3a6e;border-radius:10px;padding:24px;margin-bottom:28px;}
+  .form-title{font-size:16px;font-weight:700;letter-spacing:1px;text-transform:uppercase;margin-bottom:20px;color:#93c5fd;}
+  .form-grid{display:grid;grid-template-columns:1fr 1fr;gap:16px;}
+  .form-group{display:flex;flex-direction:column;gap:6px;}
+  .form-group.full{grid-column:1/-1;}
+  .form-label{font-size:11px;letter-spacing:1px;color:#6b7280;text-transform:uppercase;}
+  .form-input{background:#1a2744;border:1px solid #2d4a80;border-radius:6px;padding:8px 12px;color:#e8eaf0;font-size:14px;font-family:'Barlow',sans-serif;width:100%;}
+  .form-input:focus{outline:none;border-color:#3b82f6;}
+
+  /* TABS */
+  .tabs{display:flex;gap:4px;margin-bottom:24px;border-bottom:1px solid #1e3a6e;}
+  .tab{background:none;border:none;border-bottom:3px solid transparent;padding:8px 18px;color:#4b5563;font-family:'Barlow Condensed',sans-serif;font-size:14px;font-weight:700;letter-spacing:1px;text-transform:uppercase;cursor:pointer;margin-bottom:-1px;transition:color .2s;}
+  .tab.active{border-bottom-color:#3b82f6;color:#93c5fd;}
+
+  /* TABLE */
+  .tbl{width:100%;border-collapse:collapse;font-size:14px;}
+  .tbl th{padding:10px 12px;text-align:left;font-size:11px;letter-spacing:1px;color:#6b7280;text-transform:uppercase;font-family:'Barlow Condensed',sans-serif;font-weight:700;border-bottom:2px solid #1e3a6e;}
+  .tbl td{padding:12px 12px;border-bottom:1px solid #111827;}
+  .tbl tr:nth-child(even) td{background:#0b1220;}
+  .tbl tr:hover td{background:#0e1628;}
+
+  .badge{border-radius:4px;padding:2px 10px;font-weight:800;font-size:13px;letter-spacing:1px;}
+  .badge-W{background:#4ade8022;color:#4ade80;border:1px solid #4ade8044;}
+  .badge-D{background:#facc1522;color:#facc15;border:1px solid #facc1544;}
+  .badge-L{background:#f8717122;color:#f87171;border:1px solid #f8717144;}
+  .badge-P{background:#a78bfa22;color:#a78bfa;border:1px solid #a78bfa44;}
+
+  .score{font-weight:800;font-size:16px;}
+  .motm-cell{color:#facc15;font-family:'Barlow',sans-serif;font-size:13px;}
+  .scorer-cell{font-family:'Barlow',sans-serif;font-size:12px;color:#9ca3af;}
+  .date-cell{color:#9ca3af;font-family:'Barlow',sans-serif;font-size:13px;}
+  .opponent-cell{font-weight:600;letter-spacing:.5px;}
+
+  .rank-num{font-weight:800;font-size:16px;}
+  .rank-gold{color:#facc15;}
+  .rank-grey{color:#6b7280;}
+  .player-name{font-weight:600;font-size:16px;letter-spacing:.5px;}
+  .big-num{font-size:22px;font-weight:800;}
+  .green{color:#4ade80;}
+  .blue{color:#93c5fd;}
+  .yellow{color:#facc15;}
+
+  .bar-wrap{flex:1;max-width:160px;background:#1a2744;border-radius:4px;height:6px;overflow:hidden;}
+  .bar-fill{height:100%;background:#3b82f6;border-radius:4px;}
+
+  .empty{text-align:center;padding:48px;color:#4b5563;font-size:16px;font-family:'Barlow',sans-serif;}
+
+  #add-btn-wrap{margin-bottom:24px;}
+  #form-wrap{display:none;}
+  #form-wrap.open{display:block;}
+
+  .panel{display:none;}
+  .panel.active{display:block;}
+
+  @media(max-width:600px){
+    .header-stats{display:none;}
+    .form-grid{grid-template-columns:1fr;}
+    .form-group.full{grid-column:1;}
+  }
+</style>
+</head>
+<body>
+
+<div class="header">
+  <div class="header-inner">
+    <div class="header-brand">
+      <div class="icon">⚽</div>
+      <div>
+        <div class="header-title">FC Hanley PCT</div>
+        <div class="header-sub">Match Records &amp; Stats</div>
+      </div>
+    </div>
+    <div class="header-stats" id="header-stats"></div>
+  </div>
+</div>
+
+<div class="main">
+
+  <div id="add-btn-wrap">
+    <button class="btn btn-blue" onclick="toggleForm()">+ Add Match Result</button>
+  </div>
+
+  <div id="form-wrap">
+    <div class="form-box">
+      <div class="form-title">New Match</div>
+      <div class="form-grid">
+        <div class="form-group">
+          <label class="form-label">Opponent</label>
+          <input class="form-input" id="f-opponent" placeholder="e.g. Burslem FC">
+        </div>
+        <div class="form-group">
+          <label class="form-label">Date</label>
+          <input class="form-input" id="f-date" placeholder="e.g. 14/03/2026">
+        </div>
+        <div class="form-group">
+          <label class="form-label">Goals For</label>
+          <input class="form-input" id="f-gf" type="number" placeholder="0">
+        </div>
+        <div class="form-group">
+          <label class="form-label">Goals Against</label>
+          <input class="form-input" id="f-ga" type="number" placeholder="0">
+        </div>
+        <div class="form-group full">
+          <label class="form-label">Goal Scorers (e.g. Arthur:2, Bobby:1, Jacob — no number = 1 goal)</label>
+          <input class="form-input" id="f-scorers" placeholder="e.g. Arthur:2, Bobby, Jacob">
+        </div>
+        <div class="form-group full">
+          <label class="form-label">Absentees (leave blank if full squad played)</label>
+          <input class="form-input" id="f-absent" placeholder="e.g. Louie, Oakley">
+        </div>
+        <div class="form-group full">
+          <label class="form-label">Man of the Match</label>
+          <input class="form-input" id="f-motm" placeholder="e.g. Arthur">
+        </div>
+      </div>
+      <div style="margin-top:20px;display:flex;gap:12px;">
+        <button class="btn btn-green" onclick="saveMatch()">Save Match ✓</button>
+        <button class="btn btn-cancel" onclick="toggleForm()">✕ Cancel</button>
+      </div>
+    </div>
+  </div>
+
+  <div class="tabs">
+    <button class="tab active" onclick="switchTab('results',this)">Results</button>
+    <button class="tab" onclick="switchTab('scorers',this)">Top Scorers</button>
+    <button class="tab" onclick="switchTab('appearances',this)">Appearances</button>
+    <button class="tab" onclick="switchTab('motm',this)">Man of the Match</button>
+  </div>
+
+  <div id="panel-results" class="panel active"></div>
+  <div id="panel-scorers" class="panel"></div>
+  <div id="panel-appearances" class="panel"></div>
+  <div id="panel-motm" class="panel"></div>
+
+</div>
+
+<script>
+const SQUAD = ["Harvey","Harry","Freddie","George","Ralph","Louie","Carter","Oakley","Bobby","Arthur","Jacob"];
+const STORAGE_KEY = "fchanleypct_matches_v4";
+
+const SEED_MATCHES = [
+  {id:1,date:"06/09/2025",opponent:"Unity Dynamites",goalsFor:3,goalsAgainst:3,result:"D",scorers:{Carter:1,Arthur:1},motm:"Harry",squad:["Harvey","Harry","Freddie","George","Ralph","Carter","Bobby","Arthur","Jacob"]},
+  {id:2,date:"13/09/2025",opponent:"FC Hanley PCT Blue",goalsFor:1,goalsAgainst:3,result:"L",scorers:{Arthur:1},motm:"Ralph",squad:["Harvey","Harry","Freddie","George","Ralph","Louie","Carter","Oakley","Bobby","Arthur","Jacob"]},
+  {id:3,date:"20/09/2025",opponent:"Biddulph Reds",goalsFor:2,goalsAgainst:4,result:"L",scorers:{Louie:1},motm:"Louie",squad:["Harvey","Harry","Freddie","George","Louie","Carter","Oakley","Bobby","Arthur","Jacob"]},
+  {id:4,date:"27/09/2025",opponent:"Newcastle Evolution",goalsFor:2,goalsAgainst:1,result:"W",scorers:{Louie:1,Oakley:1},motm:"Freddie",squad:["Harvey","Harry","Freddie","George","Ralph","Louie","Carter","Oakley","Arthur","Jacob"]},
+  {id:5,date:"04/10/2025",opponent:"DNA Barca",goalsFor:0,goalsAgainst:4,result:"L",scorers:{},motm:"George",squad:["Harvey","Harry","George","Ralph","Louie","Carter","Bobby","Arthur","Jacob"]},
+  {id:6,date:"11/10/2025",opponent:"Stone Old Alleynians Stars",goalsFor:15,goalsAgainst:0,result:"W",scorers:{Arthur:4,Bobby:4,Ralph:2,Louie:1,Carter:1,Jacob:1,Freddie:1},motm:"Bobby",squad:["Harvey","Harry","Freddie","George","Ralph","Louie","Carter","Bobby","Arthur","Jacob"]},
+  {id:7,date:"18/10/2025",opponent:"Westlands",goalsFor:7,goalsAgainst:1,result:"W",scorers:{Oakley:1,Arthur:2,Jacob:3,Carter:1},motm:"Jacob",squad:["Harvey","Harry","Freddie","George","Ralph","Louie","Carter","Oakley","Bobby","Arthur","Jacob"]},
+  {id:8,date:"01/11/2025",opponent:"Stone Old Alleynians Mardlins",goalsFor:11,goalsAgainst:0,result:"W",scorers:{George:2,Harry:1,Bobby:1,Louie:2,Ralph:1,Jacob:1,Oakley:2},motm:"Carter",squad:["Harvey","Harry","Freddie","George","Ralph","Louie","Carter","Oakley","Bobby","Jacob"]},
+  {id:9,date:"08/11/2025",opponent:"Stoke City Girls",goalsFor:10,goalsAgainst:4,result:"W",scorers:{George:1,Bobby:4,Oakley:2,Ralph:1,Carter:1},motm:"George",squad:["Harvey","Harry","Freddie","George","Ralph","Louie","Carter","Oakley","Bobby","Jacob"]},
+  {id:10,date:"15/11/2025",opponent:"Congleton Town Blacks",goalsFor:0,goalsAgainst:6,result:"L",scorers:{},motm:"Ralph",squad:["Harvey","Harry","Freddie","George","Ralph","Louie","Carter","Oakley","Bobby","Jacob"]},
+  {id:11,date:"22/11/2025",opponent:"Newcastle Town Community",goalsFor:0,goalsAgainst:5,result:"L",scorers:{},motm:"Harvey",squad:["Harvey","Harry","George","Ralph","Louie","Carter","Oakley","Bobby","Jacob"]},
+  {id:12,date:"29/11/2025",opponent:"Unity Dynamites",goalsFor:3,goalsAgainst:1,result:"W",scorers:{Bobby:1,Arthur:2},motm:"Harry",squad:["Harvey","Harry","Freddie","Ralph","Louie","Carter","Oakley","Bobby","Arthur","Jacob"]},
+  {id:13,date:"06/12/2025",opponent:"City of Stoke",goalsFor:null,goalsAgainst:null,result:"P",scorers:{},motm:"",squad:[]},
+  {id:14,date:"13/12/2025",opponent:"DNA Barca",goalsFor:4,goalsAgainst:1,result:"W",scorers:{Arthur:2,Ralph:1,Bobby:1},motm:"Arthur",squad:["Harvey","Harry","Freddie","George","Ralph","Louie","Carter","Oakley","Bobby","Arthur","Jacob"]},
+  {id:15,date:"03/01/2026",opponent:"Newcastle Town Academy",goalsFor:null,goalsAgainst:null,result:"P",scorers:{},motm:"",squad:[]},
+  {id:16,date:"10/01/2026",opponent:"Newcastle Town Community",goalsFor:null,goalsAgainst:null,result:"P",scorers:{},motm:"",squad:[]},
+  {id:17,date:"17/01/2026",opponent:"Unity Dynamites",goalsFor:6,goalsAgainst:4,result:"W",scorers:{Ralph:2,Arthur:2,Louie:1,Jacob:1},motm:"Louie",squad:["Harvey","Harry","Freddie","George","Ralph","Louie","Carter","Bobby","Arthur","Jacob"]},
+  {id:18,date:"24/01/2026",opponent:"Congleton Town Blacks",goalsFor:1,goalsAgainst:1,result:"D",scorers:{Arthur:1},motm:"Harry",squad:["Harvey","Harry","George","Ralph","Louie","Carter","Oakley","Bobby","Arthur","Jacob"]},
+  {id:19,date:"31/01/2026",opponent:"City of Stoke",goalsFor:null,goalsAgainst:null,result:"P",scorers:{},motm:"",squad:[]},
+  {id:20,date:"07/02/2026",opponent:"Congleton Town Blacks",goalsFor:null,goalsAgainst:null,result:"P",scorers:{},motm:"",squad:[]},
+  {id:21,date:"14/02/2026",opponent:"Newcastle Town Community",goalsFor:3,goalsAgainst:3,result:"D",scorers:{Harry:2,Jacob:1},motm:"Oakley",squad:["Harvey","Harry","Freddie","George","Ralph","Louie","Oakley","Bobby","Jacob"]},
+  {id:22,date:"21/02/2026",opponent:"City of Stoke",goalsFor:5,goalsAgainst:2,result:"W",scorers:{Bobby:2,Ralph:1,Jacob:1,Oakley:1},motm:"Bobby",squad:["Harvey","Harry","Freddie","George","Ralph","Louie","Carter","Oakley","Bobby","Jacob"]},
+  {id:23,date:"28/02/2026",opponent:"Unity Dynamites",goalsFor:5,goalsAgainst:1,result:"W",scorers:{Oakley:2,Jacob:2,Arthur:1},motm:"Louie & Harvey",squad:["Harvey","Harry","Freddie","George","Louie","Carter","Oakley","Bobby","Arthur","Jacob"]},
+  {id:24,date:"07/03/2026",opponent:"Congleton Town Blacks",goalsFor:2,goalsAgainst:1,result:"W",scorers:{Louie:1,Ralph:1},motm:"Ralph",squad:["Harvey","Harry","Freddie","George","Ralph","Louie","Carter","Oakley","Bobby","Arthur","Jacob"]},
+  {id:25,date:"21/03/2026",opponent:"FC33 United Pro Gold (A)",goalsFor:5,goalsAgainst:2,result:"W",scorers:{Oakley:2,Ralph:1,Bobby:1,George:1},motm:"Oakley",squad:["Harvey","Harry","Freddie","George","Ralph","Louie","Carter","Oakley","Bobby","Arthur","Jacob"]},
+  {id:26,date:"28/03/2026",opponent:"Newcastle Town Community",goalsFor:2,goalsAgainst:2,result:"D",scorers:{Arthur:1,Louie:1},motm:"George",squad:["Harvey","Harry","Freddie","George","Ralph","Louie","Carter","Oakley","Bobby","Arthur","Jacob"]},
+  {id:27,date:"11/04/2026",opponent:"Biddulph Town",goalsFor:3,goalsAgainst:3,result:"D",scorers:{Bobby:2},motm:"Carter",squad:["Harvey","Harry","George","Ralph","Louie","Carter","Oakley","Bobby","Arthur","Jacob"]},
+  {id:28,date:"18/04/2026",opponent:"Newcastle Town Academy",goalsFor:5,goalsAgainst:2,result:"W",scorers:{Oakley:1,Jacob:1,George:1,Harry:1,Arthur:1},motm:"George",squad:["Harvey","Harry","Freddie","George","Ralph","Louie","Carter","Oakley","Bobby","Arthur","Jacob"]},
+];
+
+function loadMatches() {
+  try {
+    const saved = localStorage.getItem(STORAGE_KEY);
+    if (saved) return JSON.parse(saved);
+  } catch(e) {}
+  return SEED_MATCHES;
+}
+
+function saveMatches(matches) {
+  localStorage.setItem(STORAGE_KEY, JSON.stringify(matches));
+}
+
+function buildPlayers(matches) {
+  const p = {};
+  matches.forEach(m => {
+    if (m.result === "P") return;
+    const all = new Set([...m.squad, ...Object.keys(m.scorers), ...(m.motm ? m.motm.split(" & ") : [])]);
+    all.forEach(name => { if (!p[name]) p[name] = {goals:0,appearances:0,motm:0}; });
+    m.squad.forEach(name => { p[name].appearances = (p[name].appearances||0) + 1; });
+    Object.entries(m.scorers).forEach(([name,g]) => { if(!p[name]) p[name]={goals:0,appearances:0,motm:0}; p[name].goals=(p[name].goals||0)+g; });
+    if (m.motm) m.motm.split(" & ").forEach(name => { name=name.trim(); if(!p[name]) p[name]={goals:0,appearances:0,motm:0}; p[name].motm=(p[name].motm||0)+1; });
+  });
+  return p;
+}
+
+let matches = loadMatches();
+
+// Seed into localStorage if first time
+if (!localStorage.getItem(STORAGE_KEY)) saveMatches(matches);
+
+function render() {
+  const played = matches.filter(m => m.result !== "P");
+  const wins = played.filter(m => m.result === "W").length;
+  const draws = played.filter(m => m.result === "D").length;
+  const losses = played.filter(m => m.result === "L").length;
+  const gf = played.reduce((a,m) => a + m.goalsFor, 0);
+  const ga = played.reduce((a,m) => a + m.goalsAgainst, 0);
+  const players = buildPlayers(matches);
+
+  // Header stats
+  document.getElementById("header-stats").innerHTML = [
+    ["P", played.length, "#93c5fd"],
+    ["W", wins, "#4ade80"],
+    ["D", draws, "#facc15"],
+    ["L", losses, "#f87171"],
+    ["GF", gf, "#e8eaf0"],
+    ["GA", ga, "#e8eaf0"],
+  ].map(([l,v,c]) => `<div class="stat"><span class="stat-val" style="color:${c}">${v}</span><span class="stat-lbl">${l}</span></div>`).join("");
+
+  renderResults();
+  renderScorers(players);
+  renderAppearances(players);
+  renderMotm(players);
+}
+
+function renderResults() {
+  const el = document.getElementById("panel-results");
+  if (!matches.length) { el.innerHTML = `<div class="empty">No matches recorded yet.</div>`; return; }
+  const rows = [...matches].sort((a,b) => a.id - b.id).map(m => {
+    const scoreCell = m.result === "P" ? "—" : `${m.goalsFor} – ${m.goalsAgainst}`;
+    const badge = m.result === "P" ? "PPD" : m.result;
+    const scorerText = Object.entries(m.scorers).map(([n,g]) => `${n}${g>1?` (${g})`:""}`).join(", ") || "—";
+    const motmText = m.motm ? `⭐ ${m.motm}` : "—";
+    return `<tr>
+      <td class="rank-num rank-grey" style="white-space:nowrap">MD${m.id}</td>
+      <td class="date-cell">${m.date}</td>
+      <td class="opponent-cell">vs ${m.opponent}</td>
+      <td class="score">${scoreCell}</td>
+      <td><span class="badge badge-${m.result}">${badge}</span></td>
+      <td class="scorer-cell">${scorerText}</td>
+      <td class="motm-cell">${motmText}</td>
+    </tr>`;
+  }).join("");
+  el.innerHTML = `<table class="tbl"><thead><tr>
+    <th>MD</th><th>Date</th><th>Opponent</th><th>Score</th><th>Result</th><th>Scorers</th><th>MOTM</th>
+  </tr></thead><tbody>${rows}</tbody></table>`;
+}
+
+function renderScorers(players) {
+  const el = document.getElementById("panel-scorers");
+  const list = Object.entries(players).map(([n,s]) => ({name:n,goals:s.goals||0})).filter(p=>p.goals>0).sort((a,b)=>b.goals-a.goals);
+  if (!list.length) { el.innerHTML = `<div class="empty">No goals recorded yet.</div>`; return; }
+  const rows = list.map((p,i) => `<tr>
+    <td class="rank-num ${i===0?'rank-gold':'rank-grey'}">${i+1}</td>
+    <td class="player-name">${p.name}</td>
+    <td><span class="big-num green">${p.goals}</span> <span style="font-size:12px;color:#6b7280">goal${p.goals!==1?'s':''}</span> ${"⚽".repeat(Math.min(p.goals,12))}</td>
+  </tr>`).join("");
+  el.innerHTML = `<table class="tbl"><thead><tr><th>#</th><th>Player</th><th>Goals</th></tr></thead><tbody>${rows}</tbody></table>`;
+}
+
+function renderAppearances(players) {
+  const el = document.getElementById("panel-appearances");
+  const list = Object.entries(players).map(([n,s]) => ({name:n,apps:s.appearances||0})).filter(p=>p.apps>0).sort((a,b)=>b.apps-a.apps);
+  if (!list.length) { el.innerHTML = `<div class="empty">No appearances recorded yet.</div>`; return; }
+  const max = list[0].apps;
+  const rows = list.map((p,i) => `<tr>
+    <td class="rank-num rank-grey">${i+1}</td>
+    <td class="player-name">${p.name}</td>
+    <td><div style="display:flex;align-items:center;gap:12px;">
+      <span class="big-num blue">${p.apps}</span>
+      <div class="bar-wrap"><div class="bar-fill" style="width:${(p.apps/max)*100}%"></div></div>
+    </div></td>
+  </tr>`).join("");
+  el.innerHTML = `<table class="tbl"><thead><tr><th>#</th><th>Player</th><th>Appearances</th></tr></thead><tbody>${rows}</tbody></table>`;
+}
+
+function renderMotm(players) {
+  const el = document.getElementById("panel-motm");
+  const list = Object.entries(players).map(([n,s]) => ({name:n,motm:s.motm||0})).filter(p=>p.motm>0).sort((a,b)=>b.motm-a.motm);
+  if (!list.length) { el.innerHTML = `<div class="empty">No MOTM awards yet.</div>`; return; }
+  const rows = list.map((p,i) => `<tr>
+    <td class="rank-num ${i===0?'rank-gold':'rank-grey'}">${i+1}</td>
+    <td class="player-name">${p.name}</td>
+    <td><span class="big-num yellow">${p.motm}</span> ${"⭐".repeat(Math.min(p.motm,8))}</td>
+  </tr>`).join("");
+  el.innerHTML = `<table class="tbl"><thead><tr><th>#</th><th>Player</th><th>Awards</th></tr></thead><tbody>${rows}</tbody></table>`;
+}
+
+function switchTab(name, btn) {
+  document.querySelectorAll(".tab").forEach(t => t.classList.remove("active"));
+  document.querySelectorAll(".panel").forEach(p => p.classList.remove("active"));
+  btn.classList.add("active");
+  document.getElementById("panel-"+name).classList.add("active");
+}
+
+function toggleForm() {
+  const fw = document.getElementById("form-wrap");
+  const btn = document.querySelector("#add-btn-wrap .btn");
+  const open = fw.classList.toggle("open");
+  btn.textContent = open ? "✕ Cancel" : "+ Add Match Result";
+  btn.className = "btn " + (open ? "btn-cancel" : "btn-blue");
+}
+
+function saveMatch() {
+  const opponent = document.getElementById("f-opponent").value.trim();
+  const date = document.getElementById("f-date").value.trim();
+  const gfRaw = document.getElementById("f-gf").value;
+  const gaRaw = document.getElementById("f-ga").value;
+  const scorersRaw = document.getElementById("f-scorers").value.trim();
+  const absentRaw = document.getElementById("f-absent").value.trim();
+  const motm = document.getElementById("f-motm").value.trim();
+
+  if (!opponent || gfRaw === "" || gaRaw === "") { alert("Please fill in opponent and score."); return; }
+
+  const gf = parseInt(gfRaw);
+  const ga = parseInt(gaRaw);
+  const result = gf > ga ? "W" : gf < ga ? "L" : "D";
+
+  const scorers = {};
+  if (scorersRaw) {
+    scorersRaw.split(",").forEach(s => {
+      const parts = s.trim().split(":");
+      const name = parts[0].trim();
+      const goals = parts[1] ? parseInt(parts[1].trim()) : 1;
+      if (name) scorers[name] = (scorers[name]||0) + goals;
+    });
+  }
+
+  const absentList = absentRaw ? absentRaw.split(",").map(s => s.trim().toLowerCase()) : [];
+  const squad = SQUAD.filter(n => !absentList.includes(n.toLowerCase()));
+
+  const newId = Math.max(...matches.map(m => m.id), 0) + 1;
+  const newMatch = {
+    id: newId,
+    date: date || new Date().toLocaleDateString("en-GB"),
+    opponent, goalsFor: gf, goalsAgainst: ga, result, scorers, motm, squad
+  };
+
+  matches.push(newMatch);
+  saveMatches(matches);
+  render();
+
+  // Reset form
+  ["f-opponent","f-date","f-gf","f-ga","f-scorers","f-absent","f-motm"].forEach(id => document.getElementById(id).value = "");
+  toggleForm();
+}
+
+render();
+</script>
+</body>
+</html>
