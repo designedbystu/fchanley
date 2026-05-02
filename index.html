@@ -111,49 +111,6 @@
 
 <div class="main">
 
-  <div id="add-btn-wrap">
-    <button class="btn btn-blue" onclick="toggleForm()">+ Add Match Result</button>
-  </div>
-
-  <div id="form-wrap">
-    <div class="form-box">
-      <div class="form-title">New Match</div>
-      <div class="form-grid">
-        <div class="form-group">
-          <label class="form-label">Opponent</label>
-          <input class="form-input" id="f-opponent" placeholder="e.g. Burslem FC">
-        </div>
-        <div class="form-group">
-          <label class="form-label">Date</label>
-          <input class="form-input" id="f-date" placeholder="e.g. 14/03/2026">
-        </div>
-        <div class="form-group">
-          <label class="form-label">Goals For</label>
-          <input class="form-input" id="f-gf" type="number" placeholder="0">
-        </div>
-        <div class="form-group">
-          <label class="form-label">Goals Against</label>
-          <input class="form-input" id="f-ga" type="number" placeholder="0">
-        </div>
-        <div class="form-group full">
-          <label class="form-label">Goal Scorers (e.g. Arthur:2, Bobby:1, Jacob — no number = 1 goal)</label>
-          <input class="form-input" id="f-scorers" placeholder="e.g. Arthur:2, Bobby, Jacob">
-        </div>
-        <div class="form-group full">
-          <label class="form-label">Absentees (leave blank if full squad played)</label>
-          <input class="form-input" id="f-absent" placeholder="e.g. Louie, Oakley">
-        </div>
-        <div class="form-group full">
-          <label class="form-label">Man of the Match</label>
-          <input class="form-input" id="f-motm" placeholder="e.g. Arthur">
-        </div>
-      </div>
-      <div style="margin-top:20px;display:flex;gap:12px;">
-        <button class="btn btn-green" onclick="saveMatch()">Save Match ✓</button>
-        <button class="btn btn-cancel" onclick="toggleForm()">✕ Cancel</button>
-      </div>
-    </div>
-  </div>
 
   <div class="tabs">
     <button class="tab active" onclick="switchTab('results',this)">Results</button>
@@ -171,7 +128,7 @@
 
 <script>
 const SQUAD = ["Harvey","Harry","Freddie","George","Ralph","Louie","Carter","Oakley","Bobby","Arthur","Jacob"];
-const STORAGE_KEY = "fchanleypct_matches_v4";
+const STORAGE_KEY = "fchanleypct_matches_v6";
 
 const SEED_MATCHES = [
   {id:1,date:"06/09/2025",opponent:"Unity Dynamites",goalsFor:3,goalsAgainst:3,result:"D",scorers:{Carter:1,Arthur:1},motm:"Harry",squad:["Harvey","Harry","Freddie","George","Ralph","Carter","Bobby","Arthur","Jacob"]},
@@ -202,6 +159,8 @@ const SEED_MATCHES = [
   {id:26,date:"28/03/2026",opponent:"Newcastle Town Community",goalsFor:2,goalsAgainst:2,result:"D",scorers:{Arthur:1,Louie:1},motm:"George",squad:["Harvey","Harry","Freddie","George","Ralph","Louie","Carter","Oakley","Bobby","Arthur","Jacob"]},
   {id:27,date:"11/04/2026",opponent:"Biddulph Town",goalsFor:3,goalsAgainst:3,result:"D",scorers:{Bobby:2},motm:"Carter",squad:["Harvey","Harry","George","Ralph","Louie","Carter","Oakley","Bobby","Arthur","Jacob"]},
   {id:28,date:"18/04/2026",opponent:"Newcastle Town Academy",goalsFor:5,goalsAgainst:2,result:"W",scorers:{Oakley:1,Jacob:1,George:1,Harry:1,Arthur:1},motm:"George",squad:["Harvey","Harry","Freddie","George","Ralph","Louie","Carter","Oakley","Bobby","Arthur","Jacob"]},
+  {id:29,date:"25/04/2026",opponent:"City of Stoke",goalsFor:4,goalsAgainst:2,result:"W",scorers:{Harry:1,George:1,Bobby:2},motm:"Harvey",squad:["Harvey","Harry","Freddie","George","Ralph","Louie","Carter","Oakley","Bobby","Arthur","Jacob"]},
+  {id:30,date:"02/05/2026",opponent:"Congleton Town Blacks",goalsFor:2,goalsAgainst:2,result:"D",scorers:{Louie:2},motm:"Louie",squad:["Harvey","Harry","George","Louie","Carter","Oakley","Bobby","Arthur","Jacob"]},
 ];
 
 function loadMatches() {
